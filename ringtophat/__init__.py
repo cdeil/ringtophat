@@ -1,7 +1,11 @@
-"""ringtophat --- Fast C library for image ring- and tophat-correlation with python bindings"""
+"""ringtophat --- Fast C library for image ring- and
+tophat-correlation with python bindings"""
 import numpy as np
 import logging
 import scipy.ndimage
+
+DEFAULT_MODE = 'constant'
+
 
 def _get_structure_indices(radius):
     """
@@ -9,8 +13,9 @@ def _get_structure_indices(radius):
     i.e. with an odd number of pixels and 0 at the center
     """
     radius = int(radius)
-    y, x = np.mgrid[-radius : radius + 1, -radius : radius + 1]
+    y, x = np.mgrid[-radius:radius + 1, -radius:radius + 1]
     return x, y
+
 
 def binary_disk(radius):
     """
@@ -25,6 +30,7 @@ def binary_disk(radius):
     x, y = _get_structure_indices(radius)
     structure = x ** 2 + y ** 2 <= radius ** 2
     return structure
+
 
 def binary_ring(r_in, r_out):
     """
@@ -70,11 +76,17 @@ def ring_correlate(data, r_in, r_out, mode=DEFAULT_MODE):
 def ring_pixel_correction(r_in, r_out):
     """ Return area correction factor due to pixelation """
     actual = binary_ring(r_in, r_out).sum()
-    desired = np.pi * (r_out ** 2 - r_in ** 2) 
+    desired = np.pi * (r_out ** 2 - r_in ** 2)
     pixel_correction = actual / desired
     logging.debug('pixel_correction = {0}'.format(pixel_correction))
     return pixel_correction
 
+
 def example_image():
-    """Make an example image"""
-    return np.zeros((100, 200))
+    """Make an example image for tests"""
+    image = np.zeros((100, 200))
+    image[0, 0:10] = 1
+    image[50, 30] = 2
+    image[-1, -1] = 1
+    image[50, 0] = 1
+    return image

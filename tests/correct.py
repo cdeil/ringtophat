@@ -1,0 +1,1 @@
+"""Check ringtophat results against scipy.ndimage.convolve"""

@@ -1,16 +1,17 @@
-CFLAGS=-march=native -pipe -fomit-frame-pointer -Wall -g -std=c99 -lm
+CC?=cc
+CFLAGS=-Wall -g -std=c99 #-march=native -pipe -fomit-frame-pointer 
+LDFLAGS=-lm
 SRC=ringtophat.c test.c
 OBJ=$(subst .c,.o,$(SRC))
 EXE=test
 
+all:	$(OBJ) $(EXE)
+
 $(EXE):	$(OBJ)
-	gcc $(CFLAGS) $(OBJ) -o $(EXE)
+	$(CC) $(LDFLAGS) $(OBJ) -o $(EXE)
 
-$(OBJ): $(SRC)
-	gcc $(CFLAGS) -c $(SRC)
-
-all:	$(EXE)
-	$(EXE).o
+$(OBJ):	$(SRC)
+	$(CC) $(CFLAGS) -c $(SRC)
 
 clean:
-	rm -f $(OBJS) $(EXE) *.o
+	rm -f $(OBJS) $(EXE) *.o *.pgm

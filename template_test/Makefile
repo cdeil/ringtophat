@@ -1,0 +1,1 @@
+gcc -c myfunction.hh
